@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>FOOTY vs HOOPS</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="game-root">
+    <canvas id="webgl-canvas"></canvas>
+
+    <div id="ui-container">
+      <!-- 1. РЕГИСТРАЦИЯ / ВЫБОР СТОРОНЫ -->
+      <div id="screen-register" class="screen flex-center">
+        <div class="card main-card">
+          <img src="/emblem.png" class="emblem" onerror="this.style.display='none'" alt="FOOTY vs HOOPS" />
+          <h1 class="logo-text">FOOTY <span class="vs">VS</span> HOOPS</h1>
+          <p class="tagline">CHOOSE YOUR ALLEGIANCE</p>
+          <div class="team-selection-grid">
+            <button id="btn-side-footy" class="side-btn footy">
+              <span class="icon">⚽️</span>
+              <span class="title">FOOTY</span>
+              <span class="sub">Football Pride</span>
+            </button>
+            <button id="btn-side-hoops" class="side-btn hoops">
+              <span class="icon">🏀</span>
+              <span class="title">HOOPS</span>
+              <span class="sub">Basketball Kings</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ГЛАВНОЕ МЕНЮ (LOBBY) -->
+      <div id="screen-lobby" class="screen hidden">
+        <div class="header-bar">
+          <div class="user-chip">
+            <span id="user-team-badge" class="badge">⚽️ FOOTY</span>
+            <span id="user-name">Player</span>
+            <span class="rating">🏆 <b id="user-rating">1000</b></span>
+          </div>
+          <div class="currency-chip">💰 <span id="user-coins">250</span></div>
+        </div>
+
+        <div class="global-banner">
+          <div class="global-title">GLOBAL RIVALRY</div>
+          <div class="global-bar">
+            <div id="bar-footy" class="bar-fill footy" style="width: 50%;">⚽️ FOOTY <span id="stat-footy-wins">0</span></div>
+            <div id="bar-hoops" class="bar-fill hoops" style="width: 50%;"><span id="stat-hoops-wins">0</span> HOOPS 🏀</div>
+          </div>
+        </div>
+
+        <div class="card mode-card">
+          <h2>SELECT REAL-TIME 1v1</h2>
+          <div class="mode-grid">
+            <button id="btn-play-football" class="btn primary-footy">
+              <span class="mode-icon">⚽️</span>
+              <div class="mode-info">
+                <b>FOOTBALL 1v1</b>
+                <span>90s Match • 1 Pt / Goal</span>
+              </div>
+            </button>
+            <button id="btn-play-basketball" class="btn primary-hoops">
+              <span class="mode-icon">🏀</span>
+              <div class="mode-info">
+                <b>BASKETBALL 1v1</b>
+                <span>90s Match • 2 Pts / Basket</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="nav-tabs">
+            <button id="btn-tab-leaderboard" class="btn secondary">🏆 LEADERBOARD</button>
+            <button id="btn-tab-profile" class="btn secondary">👤 PROFILE</button>
+            <button id="btn-tab-shop" class="btn secondary">🛒 SHOP</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. МАТЧМЕЙКИНГ -->
+      <div id="screen-matchmaking" class="screen hidden flex-center">
+        <div class="card matchmaking-card">
+          <div class="radar-pulse"></div>
+          <h2 id="mm-status">FINDING REAL OPPONENT...</h2>
+          <p class="subtext">Connecting to PvP Server Matchmaker</p>
+          <button id="btn-cancel-mm" class="btn secondary">CANCEL SEARCH</button>
+        </div>
+      </div>
+
+      <!-- 4. COUNTDOWN (3 - 2 - 1 - GO!) -->
+      <div id="screen-countdown" class="screen hidden flex-center">
+        <div class="vs-modal">
+          <div class="vs-player p1"><span id="cd-p1-team">⚽️</span> <b id="cd-p1-name">P1</b></div>
+          <div class="vs-label">VS</div>
+          <div class="vs-player p2"><b id="cd-p2-name">P2</b> <span id="cd-p2-team">🏀</span></div>
+        </div>
+        <div id="cd-number" class="countdown-pop">3</div>
+      </div>
+
+      <!-- 5. МАТЧ HUD -->
+      <div id="hud" class="hidden">
+        <div class="hud-bar">
+          <div class="team-score left"><span id="hud-name-left">FOOTY</span> <b id="hud-score-left">0</b></div>
+          <div class="hud-center">
+            <div id="hud-timer">01:30</div>
+            <div id="hud-mode-label" class="hud-mode-tag">FOOTBALL 1v1</div>
+          </div>
+          <div class="team-score right"><b id="hud-score-right">0</b> <span id="hud-name-right">HOOPS</span></div>
+        </div>
+      </div>
+
+      <!-- 6. РЕЗУЛЬТАТ МАТЧА -->
+      <div id="screen-result" class="screen hidden flex-center">
+        <div class="card result-card">
+          <img src="/emblem.png" class="emblem-small" onerror="this.style.display='none'" />
+          <h1 id="res-verdict" class="verdict">VICTORY</h1>
+          <div class="score-display" id="res-score">2 - 1</div>
+          <div class="res-details" id="res-details">Rating +25 • Coins +50</div>
+          <div class="btn-group">
+            <button id="btn-rematch" class="btn primary-footy">FIND NEW MATCH</button>
+            <button id="btn-back-lobby" class="btn secondary">MAIN MENU</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. МОДАЛКА ЛИДЕРБОРДА -->
+      <div id="modal-leaderboard" class="modal hidden flex-center">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>GLOBAL LEADERBOARD</h3>
+            <button class="btn-close" id="btn-close-lb">✕</button>
+          </div>
+          <div class="lb-table-wrap">
+            <table class="lb-table">
+              <thead>
+                <tr><th>#</th><th>Player</th><th>Team</th><th>Rating</th></tr>
+              </thead>
+              <tbody id="lb-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. МОДАЛКА ПРОФИЛЯ -->
+      <div id="modal-profile" class="modal hidden flex-center">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>PLAYER PROFILE</h3>
+            <button class="btn-close" id="btn-close-prof">✕</button>
+          </div>
+          <div class="prof-content">
+            <h2 id="prof-name">Username</h2>
+            <div class="prof-team-badge" id="prof-team">⚽️ FOOTY CHAMPION</div>
+            <div class="prof-stats-grid">
+              <div class="stat-box"><span class="val" id="prof-rating">1000</span><span class="lbl">Rating</span></div>
+              <div class="stat-box"><span class="val" id="prof-wins">0</span><span class="lbl">Wins</span></div>
+              <div class="stat-box"><span class="val" id="prof-losses">0</span><span class="lbl">Losses</span></div>
+              <div class="stat-box"><span class="val" id="prof-matches">0</span><span class="lbl">Played</span></div>
+            </div>
+            <div class="ref-box">
+              <p><b>Referral Link:</b> Invite friends to win bonus coins!</p>
+              <input type="text" id="prof-ref-link" readonly value="https://t.me/your_bot?start=ref123" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. МОДАЛКА МАГАЗИНА (COSMETICS) -->
+      <div id="modal-shop" class="modal hidden flex-center">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>COSMETIC VAULT</h3>
+            <button class="btn-close" id="btn-close-shop">✕</button>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-item">
+              <div class="item-icon">🔥</div>
+              <b>Fire Flame Aura</b>
+              <span>Visual effect only</span>
+              <button class="btn secondary btn-sm">500 💰</button>
+            </div>
+            <div class="shop-item">
+              <div class="item-icon">⚡️</div>
+              <b>Neon Ball Glow</b>
+              <span>Visual effect only</span>
+              <button class="btn secondary btn-sm">350 💰</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. ТАЧ-УПРАВЛЕНИЕ ДЛЯ ТЕЛЕФОНОВ -->
+      <div id="touch-controls" class="hidden">
+        <div id="joystick-zone">
+          <div id="joystick-base">
+            <div id="joystick-knob"></div>
+          </div>
+        </div>
+        <div id="touch-action-buttons">
+          <button id="btn-touch-turbo" class="touch-btn turbo">⚡️ TURBO</button>
+          <button id="btn-touch-shoot" class="touch-btn shoot">🎯 SHOOT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
