@@ -16,7 +16,7 @@ if (tg) {
 // Укажите адрес вашего сервера
 const SERVER_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:4000'
-  : 'https://ВАШ-БЭКЕНД.onrender.com';
+  : 'https://footyvshoops2.onrender.com/';
 
 const net = new NetworkService(SERVER_URL);
 const input = new InputController();
