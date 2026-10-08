@@ -401,3 +401,233 @@ body, html {
 }
 .shop-item .item-icon { font-size: 2.2rem; }
 .btn-sm { padding: 8px 16px; font-size: 0.8rem; margin-top: 6px; }
+
+/* --- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: rgba(18, 22, 34, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: #7a829e;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.nav-item.active, .nav-item:hover {
+  color: #00d2ff;
+}
+
+.nav-icon {
+  font-size: 20px;
+}
+
+/* Отступ снизу для экрана, чтобы контент не перекрывался меню */
+.tab-content {
+  padding-bottom: 80px;
+}
+
+/* --- КВЕСТЫ --- */
+.section-heading {
+  font-size: 18px;
+  margin: 15px 0;
+  color: #fff;
+}
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quest-item {
+  background: #171d2d;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quest-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+.quest-details p {
+  margin: 0;
+  font-size: 12px;
+  color: #8a93a8;
+}
+
+.quest-btn {
+  background: #00d2ff;
+  border: none;
+  color: #0d111b;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* --- МОДАЛЬНЫЕ ОКНА --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-box {
+  background: #171d2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 380px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  color: #8a93a8;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* --- МАГАЗИН --- */
+.shop-tabs {
+  display: flex;
+  gap: 8px;
+  background: #0f1320;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.shop-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #7a829e;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.shop-tab.active {
+  background: #232b42;
+  color: #fff;
+}
+
+.shop-category-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.shop-card {
+  background: #0f1320;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+
+.shop-card-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.shop-card h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.shop-card p {
+  margin: 0 0 10px 0;
+  font-size: 10px;
+  color: #7a829e;
+}
+
+.buy-btn {
+  width: 100%;
+  background: #34c759;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* --- ВЫВОД СРЕДСТВ --- */
+.withdraw-body {
+  text-align: center;
+}
+
+.withdraw-icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.withdraw-notice {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin-bottom: 18px;
+}
+
+.withdraw-balance-box {
+  background: #0f1320;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #8a93a8;
+  margin-bottom: 18px;
+}
+
+.withdraw-balance-box strong {
+  color: #ffd700;
+  }

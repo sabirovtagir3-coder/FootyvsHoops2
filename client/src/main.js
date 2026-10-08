@@ -262,3 +262,98 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+// --- ИНИЦИАЛИЗАЦИЯ НАВИГАЦИИ И ВСПЛЫВАЮЩИХ ОКОН ---
+function setupMenuNavigation() {
+  const tg = window.Telegram?.WebApp;
+
+  // 1. Переключение нижних вкладок (Играть / Квесты)
+  const navBtns = document.querySelectorAll('.nav-item[data-tab]');
+  const tabPlay = document.getElementById('tab-play-content');
+  const tabQuests = document.getElementById('tab-quests-content');
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const target = btn.dataset.tab;
+      if (target === 'play') {
+        tabPlay.classList.remove('hidden');
+        tabQuests.classList.add('hidden');
+      } else if (target === 'quests') {
+        tabPlay.classList.add('hidden');
+        tabQuests.classList.remove('hidden');
+      }
+    });
+  });
+
+  // 2. Окно вывода средств
+  const modalWithdraw = document.getElementById('modal-withdraw');
+  const btnOpenWithdraw = document.getElementById('btn-open-withdraw');
+  const btnCloseWithdraw = document.getElementById('btn-close-withdraw');
+  const btnWithdrawOk = document.getElementById('btn-withdraw-ok');
+  const withdrawCoins = document.getElementById('withdraw-coins-count');
+
+  btnOpenWithdraw.addEventListener('click', () => {
+    withdrawCoins.textContent = userProfile?.coins || 250;
+    modalWithdraw.classList.remove('hidden');
+  });
+
+  [btnCloseWithdraw, btnWithdrawOk].forEach(b => {
+    b.addEventListener('click', () => modalWithdraw.classList.add('hidden'));
+  });
+
+  // 3. Окно Магазина и категории внутри него
+  const modalShop = document.getElementById('modal-shop');
+  const btnOpenShop = document.getElementById('btn-open-shop');
+  const btnCloseShop = document.getElementById('btn-close-shop');
+  const shopTabs = document.querySelectorAll('.shop-tab');
+  const categories = {
+    skins: document.getElementById('shop-cat-skins'),
+    arenas: document.getElementById('shop-cat-arenas'),
+    boosts: document.getElementById('shop-cat-boosts')
+  };
+
+  btnOpenShop.addEventListener('click', () => modalShop.classList.remove('hidden'));
+  btnCloseShop.addEventListener('click', () => modalShop.classList.add('hidden'));
+
+  shopTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      shopTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const cat = tab.dataset.category;
+      Object.keys(categories).forEach(k => {
+        if (categories[k]) {
+          categories[k].classList.toggle('hidden', k !== cat);
+        }
+      });
+    });
+  });
+
+  // 4. Квесты: реферальная кнопка «Пригласить друга»
+  const btnInvite = document.getElementById('btn-invite-friend');
+  btnInvite.addEventListener('click', () => {
+    const botUrl = 'https://t.me/footyvshoops_bot?startapp=ref_' + (tg?.initDataUnsafe?.user?.id || 'demo');
+    const shareText = '⚽️ Присоединяйся к битве FOOTY vs HOOPS в реальном времени!';
+
+    if (tg?.openTelegramLink) {
+      tg.openTelegramLink('https://t.me/share/url?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent(shareText)}');
+    } else {
+      navigator.clipboard?.writeText(botUrl);
+      alert('Ссылка скопирована в буфер обмена!');
+    }
+  });
+
+  // 5. Квесты: подписки на канал и чат
+  document.getElementById('btn-quest-channel')?.addEventListener('click', () => {
+    if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/FootyHoops');
+  });
+  document.getElementById('btn-quest-chat')?.addEventListener('click', () => {
+    if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/telegram');
+  });
+}
+
+// Вызовите setupMenuNavigation() внутри функции инициализации init() вашего приложения
+setupMenuNavigation();
